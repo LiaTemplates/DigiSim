@@ -33,7 +33,6 @@ function parse(repr) {
     const div1 = document.createElement("div");
     div1.className = "simcir";
     div1.innerHTML = JSON.stringify(jsonData);
-    console.log(jsonData);
 
     document.body.appendChild(div1);
 }
@@ -75,7 +74,15 @@ function parseComponent(line) {
 }
 
 function extractComponentInfo(comp, index) {
-    return {type: comp.type, id: `dev${index}`, numInputs: comp.inputs.length, x: comp.pos.x, y: comp.pos.y, label: comp.label};
+    return {
+        type: comp.type, 
+        id: `dev${index}`, 
+        numInputs: comp.inputs.length, 
+        numOutputs: comp.outputs.length,
+        x: comp.pos.x, 
+        y: comp.pos.y, 
+        label: comp.label
+    };
 }
 
 function parseWire(line, components) {
@@ -100,13 +107,17 @@ function parseWire(line, components) {
 }
 
 function extractWireInfo(wire, components) {
-    return {from: `dev${components.indexOf(wire.from.c)}.out${wire.from.i}`,
-    to: `dev${components.indexOf(wire.to.c)}.in${wire.to.i}`};
+    return {
+        from: `dev${components.indexOf(wire.from.c)}.out${wire.from.i}`,
+        to: `dev${components.indexOf(wire.to.c)}.in${wire.to.i}`
+    };
 }
 
 function parseVars(varData) {
     varData = varData.replace(/\[/g, "").replace(/\]/g, "").replace(/ /g, "");
-    const varNames = varData.split(",");
+    let varNames = varData.split(",");
+
+    if(varNames === [""]) varNames = [];
 
     return varNames;
 }
