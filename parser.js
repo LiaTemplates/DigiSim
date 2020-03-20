@@ -1,5 +1,5 @@
 function parse(repr) {
-    lines = repr.split(";").map(str => str.replace("\n", " "));
+    const lines = repr.split(";").map(str => str.replace(/\n/g, " "));
 
     const jsonData = {
         width: 500,
@@ -35,27 +35,52 @@ function parse(repr) {
 function parseComponent(line) {
     line = line.replace(/ /g, "").replace(/"/g, "");
 
-    const index = line.indexOf("(");
-    const componentName = line.slice(0, index);
-    const args = line.slice(index + 1, line.length - 1).split(",");
+    const gateIndex = line.indexOf("(");
+    const componentName = line.slice(0, gateIndex);
     
+    const inputIndex = line.indexOf("[");
+    const inputLength = line.indexOf("]") - inputIndex + 1;
+    
+    const inputData = line.slice(inputIndex, inputIndex + inputLength);
+
+    line = line.slice(inputIndex + inputLength, line.length);
+
+    const outputIndex = line.indexOf("[");
+    const outputLength = line.indexOf("]") - outputIndex + 1;
+    
+    const outputData = line.slice(outputIndex, outputIndex + outputLength);
+
+    line = line.slice(outputIndex  + outputLength + 1, line.length).replace(/\)/g, "");
+
+    const args = line.split(",");
+    
+    const inputs = parseVars(inputData);
+    const outputs = parseVars(outputData);
+
     const newComponent = {
         type: componentName,
-        inputs: [args[0], args[1]],
-        outputs: [args[2]],
-        pos: {x: parseInt(args[3]), y: parseInt(args[4])},
-        label: args[5]
+        inputs: inputs,
+        outputs: outputs,
+        pos: {x: parseInt(args[0]), y: parseInt(args[1])},
+        label: args[2]
     }
 
     return newComponent;
 }
 
 function extractComponentInfo(comp, index) {
-    return {type: comp.type, id: `dev${index}`, x: comp.pos.x, y: comp.pos.y, label: comp.label};
+    return {type: comp.type, id: `dev${index}`, numInputs: comp.inputs.length, x: comp.pos.x, y: comp.pos.y, label: comp.label};
 }
 
 function parseWire(line) {
 
 }
 
-parse("AND(a, b, c, 100, 100, \"Test\");")
+function parseVars(varData) {
+    varData.replace(/\[/g, "").replace(/\[/g, "").replace(/ /g, "");
+    const varNames = varData.split(",");
+
+    return varNames;
+}
+
+parse("AND([a, b, d], [c], 100, 100, \"Test\");")
