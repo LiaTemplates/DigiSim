@@ -28,7 +28,11 @@ circuit.start();
 dark: false
 -->
 
-# LiaTest
+# DigiSim for LiaScript
+
+Implementation of DigitalJs for Liascript
+[DigitalJS Source](https://github.com/tilk/digitaljs)
+
 
 ## Test Circuit
 
