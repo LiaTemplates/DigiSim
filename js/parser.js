@@ -284,14 +284,12 @@ function finalizeJSON(name) {
     };
 }
 
-function insertCircuit(name, divname) {
+function insertCircuit(name, digiSimId) {
     if(!circuits[name]) {
         throw new Error(`${name} is not a circuit!`);
         return;
     }
 
-    const div = document.getElementById(divname);
-    const circuit = new digitaljs.Circuit(circuits[name]);
-    circuit.displayOn(div);
-    circuit.start();
+    const digiSim = document.getElementById(digiSimId);
+    digiSim.innerHTML = `<digi-sim>circuits[name]</digi-sim>;
 }
