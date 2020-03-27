@@ -13,6 +13,9 @@ script:   https://cdn.jsdelivr.net/gh/liaTemplates/DigiSim/js/parser.js
 script:   https://tilk.github.io/digitaljs/main.js
 
 @onload
+
+// create custom html element for the circuit
+
 customElements.define('digi-sim', class extends HTMLElement {
   constructor () {
     super()
@@ -50,8 +53,28 @@ customElements.define('digi-sim', class extends HTMLElement {
     }
     this.circuit.stop()
   }
-})
+});
+
+// predefine some circuits
+Button("btn_s", "S", {x: 50, y: 165});
+Button("btn_r", "R", {x: 50, y: 45});
+
+NOR(["r", "nor1"], ["q"], "", 1, {x: 200, y: 50});
+NOR(["nor2", "s"], ["q_"], "", 1, {x: 200, y: 150});
+
+Lamp("lmp_q", "Q", {x: 350, y: 55});
+Lamp("lmp_q_", "~Q", {x: 350, y: 155});
+
+wire("btn_s", "s");
+wire("btn_r", "r");
+wire("q", "nor2");
+wire("q_", "nor1");
+wire("q", "lmp_q");
+wire("q_", "lmp_q_");
+finalizeJSON("sr_latch");
 @end
+
+@DigiSim.runJson: @DigiSim._evalJson(@uid,```@input```)
 
 @DigiSim.evalJson: @DigiSim._evalJson(@uid,```@0```)
 
@@ -89,8 +112,8 @@ customElements.define('digi-sim', class extends HTMLElement {
 <div id="digisim_@1"></div>
 @end
 
+
 dark: false
-@DigiSim.runJson: @DigiSim._evalJson(@uid,```@input```)
 
 -->
 
@@ -543,7 +566,7 @@ document as shown below.
 
 Using the `@onload`-macro you cant predefine circuits which can later be inserted into the document with the `@DigiSim.insertCircuit(name)` macro by giving the name of the circuit.
 
-@DigiSim.insertCircuit(ex1)
+@DigiSim.insertCircuit(sr_latch)
 
 ## `@DigiSim.eval`
 
@@ -695,7 +718,7 @@ Unary operations that can be performed on numbers.
 
 <p>`signed`: Determines wheter the numbers are signed or unsigned. `type: Boolean`</p>
 
-```js 
+```js
 Negator(input, output, label, bitsIn, bitsOut, signed, pos=undefined)
 ```
 
@@ -729,7 +752,7 @@ GreaterThanOrEqual(inputs, output, label, bitsIn, signed, pos=undefined)
 
 Shift operations that can be performed on numbers.
 
-``` js 
+``` js
 ShiftLeft(inputs, output, label, bitsIn, bitsOut, signed, pos=undefined)
 ShiftRight(inputs, output, label, bitsIn, bitsOut, signed, pos=undefined)
 ```
