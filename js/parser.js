@@ -273,7 +273,7 @@ function finalizeJSON(name) {
     }
 
     circuits[name] = json;
-    
+
     // reset state
     components = [];
     wires = [];
