@@ -9,11 +9,10 @@ language: en
 
 narrator: US English Female
 
-script:   https://cdn.jsdelivr.net/gh/liaTemplates/DigiSim/js/parser.js
+script:   https://cdn.jsdelivr.net/gh/liaTemplates/DigiSim/js/parser.min.js
 script:   https://tilk.github.io/digitaljs/main.js
 
 @onload
-
 // create custom html element for the circuit
 
 customElements.define('digi-sim', class extends HTMLElement {
@@ -84,18 +83,18 @@ finalizeJSON("sr_latch");
   "LIA: stop"
 </script>
 
-
-<div id="sim_@0" ></div>
+<div id="sim_@0"></div>
 @end
 
 @DigiSim.insertCircuit: @DigiSim._insertCircuit_(@0, @uid)
 
 @DigiSim._insertCircuit_
 <script>
-  insertCircuit(`@0`, `digisim_@1`);
+  insertCircuit(`@0`, `sim_insert_@1`);
+  "LIA: stop"
 </script>
 
-<div id="digisim_@1">Loading Circuit</div>
+<div id="sim_insert_@1">Loading Circuit</div>
 @end
 
 @DigiSim.eval: @DigiSim._eval_(```@0```, @uid)
@@ -106,15 +105,14 @@ finalizeJSON("sr_latch");
 
   const rand = Math.random().toString();
   finalizeJSON(`dev_${rand}`);
-  insertCircuit(`dev_${rand}`, "digisim_@1");
+  insertCircuit(`dev_${rand}`, "sim_eval_@1");
+  "LIA: stop"
 </script>
 
-<div id="digisim_@1"></div>
+<div id="sim_eval_@1"></div>
 @end
 
-
 dark: false
-
 -->
 
 # DigiSim for LiaScript
@@ -122,13 +120,10 @@ dark: false
 Implementation of DigitalJs for Liascript
 [DigitalJS Source](https://github.com/tilk/digitaljs)
 
-<digi-sim>
-blablabla
-</digi-sim>
-
 ## `@DigiSim.evalJson`
 
 Put the JSON of your circuit into Markdown ticks and put the makro `@DigiSim.evalJson` at the first line of your markdown and the circuit will be evaluated and shown.
+
 
 ``` json @DigiSim.evalJson
 {
@@ -283,141 +278,732 @@ included in this documentation.
 It is also possible to put multiple circuits on the same site of your LiaScript
 document as shown below.
 
+
+`D-Latch`
 ``` json @DigiSim.evalJson
 {
-  "devices": {
-    "dev0": {
-      "label": "s",
-      "position": {
-        "x": 0,
-        "y": 20
-      },
-      "celltype": "$button",
-      "propagation": 0
+    "devices": {
+        "dev0": {
+            "label": "d",
+            "position": {
+                "x": 0,
+                "y": 32.5
+            },
+            "celltype": "$button",
+            "propagation": 0
+        },
+        "dev1": {
+            "label": "e",
+            "position": {
+                "x": 0,
+                "y": 82.5
+            },
+            "celltype": "$button",
+            "propagation": 0
+        },
+        "dev2": {
+            "label": "q",
+            "position": {
+                "x": 660,
+                "y": 65
+            },
+            "celltype": "$lamp",
+            "propagation": 1
+        },
+        "dev3": {
+            "label": "nq",
+            "position": {
+                "x": 660,
+                "y": 10
+            },
+            "celltype": "$lamp",
+            "propagation": 1
+        },
+        "dev4": {
+            "position": {
+                "x": 275,
+                "y": 95
+            },
+            "celltype": "$and",
+            "propagation": 1,
+            "bits": 1
+        },
+        "dev5": {
+            "position": {
+                "x": 290,
+                "y": -5
+            },
+            "celltype": "$and",
+            "propagation": 1,
+            "bits": 1
+        },
+        "dev7": {
+            "position": {
+                "x": 95,
+                "y": 105
+            },
+            "celltype": "$not",
+            "propagation": 1,
+            "bits": 1
+        },
+        "dev9": {
+            "position": {
+                "x": 450,
+                "y": 5
+            },
+            "celltype": "$nor",
+            "propagation": 1,
+            "bits": 1
+        },
+        "dev10": {
+            "position": {
+                "x": 440,
+                "y": 105
+            },
+            "celltype": "$nor",
+            "propagation": 1,
+            "bits": 1
+        }
     },
-    "dev1": {
-      "label": "r",
-      "position": {
-        "x": 155,
-        "y": 75
-      },
-      "celltype": "$button",
-      "propagation": 0
+    "connectors": [
+        {
+            "from": {
+                "id": "dev0",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev5",
+                "port": "in2"
+            },
+            "name": "d",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev0",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev7",
+                "port": "in"
+            },
+            "name": "d",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev1",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev4",
+                "port": "in1"
+            },
+            "name": "e",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev1",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev5",
+                "port": "in1"
+            },
+            "name": "e",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev10",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev2",
+                "port": "in"
+            },
+            "name": "q",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev10",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev9",
+                "port": "in2"
+            },
+            "name": "q",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev9",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in"
+            },
+            "name": "nq",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev9",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev10",
+                "port": "in2"
+            },
+            "name": "nq",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev7",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev4",
+                "port": "in2"
+            },
+            "name": "nd",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev4",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev10",
+                "port": "in1"
+            },
+            "name": "r",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev5",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev9",
+                "port": "in1"
+            },
+            "name": "s",
+            "vertices": []
+        }
+    ],
+    "subcircuits": {}
+}
+```
+
+`Priority encoder`
+``` json @DigiSim.evalJson
+{
+    "devices": {
+        "dev0": {
+            "label": "y",
+            "position": {
+                "x": 901.09375,
+                "y": 191.5
+            },
+            "celltype": "$numdisplay",
+            "propagation": 0,
+            "numbase": "hex",
+            "bits": 2
+        },
+        "dev1": {
+            "label": "valid",
+            "position": {
+                "x": 903.109375,
+                "y": 241.5
+            },
+            "celltype": "$lamp",
+            "propagation": 1
+        },
+        "dev2": {
+            "label": "a",
+            "position": {
+                "x": 0,
+                "y": 120.5
+            },
+            "celltype": "$numentry",
+            "propagation": 0,
+            "numbase": "hex",
+            "bits": 4
+        },
+        "dev3": {
+            "label": "$procmux$3",
+            "position": {
+                "x": 603.609375,
+                "y": 187.5
+            },
+            "celltype": "$pmux",
+            "propagation": 1,
+            "bits": {
+                "in": 3,
+                "sel": 4
+            }
+        },
+        "dev4": {
+            "label": "$procmux$4_CMP0",
+            "position": {
+                "x": 303.5625,
+                "y": 0
+            },
+            "celltype": "$eq",
+            "propagation": 1,
+            "bits": {
+                "in1": 4,
+                "in2": 1
+            },
+            "signed": {
+                "in1": false,
+                "in2": false
+            }
+        },
+        "dev5": {
+            "label": "$procmux$5_CMP0",
+            "position": {
+                "x": 303.5625,
+                "y": 60
+            },
+            "celltype": "$eq",
+            "propagation": 1,
+            "bits": {
+                "in1": 3,
+                "in2": 1
+            },
+            "signed": {
+                "in1": false,
+                "in2": false
+            }
+        },
+        "dev6": {
+            "label": "$procmux$6_CMP0",
+            "position": {
+                "x": 303.5625,
+                "y": 145.5
+            },
+            "celltype": "$eq",
+            "propagation": 1,
+            "bits": {
+                "in1": 2,
+                "in2": 1
+            },
+            "signed": {
+                "in1": false,
+                "in2": false
+            }
+        },
+        "dev7": {
+            "position": {
+                "x": 459.5859375,
+                "y": 99.5
+            },
+            "celltype": "$busgroup",
+            "propagation": 0,
+            "groups": [
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        "dev8": {
+            "position": {
+                "x": 453.5625,
+                "y": 49.5
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "000"
+        },
+        "dev9": {
+            "position": {
+                "x": 453.5625,
+                "y": 191.5
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "111"
+        },
+        "dev10": {
+            "position": {
+                "x": 453.5625,
+                "y": 241.5
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "101"
+        },
+        "dev11": {
+            "position": {
+                "x": 453.5625,
+                "y": 291.5
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "011"
+        },
+        "dev12": {
+            "position": {
+                "x": 453.5625,
+                "y": 341.5
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "001"
+        },
+        "dev13": {
+            "position": {
+                "x": 160.8125,
+                "y": 65
+            },
+            "celltype": "$constant",
+            "propagation": 0,
+            "numbase": "hex",
+            "constant": "1"
+        },
+        "dev14": {
+            "position": {
+                "x": 753.609375,
+                "y": 194.5
+            },
+            "celltype": "$busslice",
+            "propagation": 0,
+            "slice": {
+                "first": 1,
+                "count": 2,
+                "total": 3
+            }
+        },
+        "dev15": {
+            "position": {
+                "x": 758.34375,
+                "y": 244.5
+            },
+            "celltype": "$busslice",
+            "propagation": 0,
+            "slice": {
+                "first": 0,
+                "count": 1,
+                "total": 3
+            }
+        },
+        "dev16": {
+            "position": {
+                "x": 156.078125,
+                "y": 119.5
+            },
+            "celltype": "$busslice",
+            "propagation": 0,
+            "slice": {
+                "first": 1,
+                "count": 3,
+                "total": 4
+            }
+        },
+        "dev17": {
+            "position": {
+                "x": 156.078125,
+                "y": 163.5
+            },
+            "celltype": "$busslice",
+            "propagation": 0,
+            "slice": {
+                "first": 2,
+                "count": 2,
+                "total": 4
+            }
+        },
+        "dev18": {
+            "position": {
+                "x": 309.5546875,
+                "y": 205.5
+            },
+            "celltype": "$busslice",
+            "propagation": 0,
+            "slice": {
+                "first": 3,
+                "count": 1,
+                "total": 4
+            }
+        }
     },
-    "dev2": {
-      "label": "q",
-      "position": {
-        "x": 480,
-        "y": 55
-      },
-      "celltype": "$lamp",
-      "propagation": 1
-    },
-    "dev3": {
-      "label": "nq",
-      "position": {
-        "x": 325,
-        "y": 0
-      },
-      "celltype": "$lamp",
-      "propagation": 1
-    },
-    "dev6": {
-      "label": "$or$_input.sv:7$1",
-      "position": {
-        "x": 310,
-        "y": 50
-      },
-      "celltype": "$nor",
-      "propagation": 1,
-      "bits": 1
-    },
-    "dev7": {
-      "label": "$or$_input.sv:8$3",
-      "position": {
-        "x": 140,
-        "y": 15
-      },
-      "celltype": "$nor",
-      "propagation": 1,
-      "bits": 1
-    }
-  },
-  "connectors": [
-    {
-      "from": {
-        "id": "dev0",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev7",
-        "port": "in1"
-      },
-      "name": "s",
-      "vertices": []
-    },
-    {
-      "from": {
-        "id": "dev1",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev6",
-        "port": "in1"
-      },
-      "name": "r",
-      "vertices": []
-    },
-    {
-      "from": {
-        "id": "dev6",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev2",
-        "port": "in"
-      },
-      "name": "q",
-      "vertices": []
-    },
-    {
-      "from": {
-        "id": "dev6",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev7",
-        "port": "in2"
-      },
-      "name": "q",
-      "vertices": []
-    },
-    {
-      "from": {
-        "id": "dev7",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev3",
-        "port": "in"
-      },
-      "name": "nq",
-      "vertices": []
-    },
-    {
-      "from": {
-        "id": "dev7",
-        "port": "out"
-      },
-      "to": {
-        "id": "dev6",
-        "port": "in2"
-      },
-      "name": "nq",
-      "vertices": []
-    }
-  ],
-  "subcircuits": {}
+    "connectors": [
+        {
+            "from": {
+                "id": "dev14",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev0",
+                "port": "in"
+            },
+            "name": "y",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev15",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev1",
+                "port": "in"
+            },
+            "name": "valid",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev2",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev4",
+                "port": "in1"
+            },
+            "name": "a",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev2",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev16",
+                "port": "in"
+            },
+            "name": "a",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev2",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev17",
+                "port": "in"
+            },
+            "name": "a",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev2",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev18",
+                "port": "in"
+            },
+            "name": "a",
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev8",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in0"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev7",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "sel"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev3",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev14",
+                "port": "in"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev3",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev15",
+                "port": "in"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev9",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in1"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev10",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in2"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev11",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in3"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev12",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev3",
+                "port": "in4"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev13",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev4",
+                "port": "in2"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev13",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev5",
+                "port": "in2"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev13",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev6",
+                "port": "in2"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev4",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev7",
+                "port": "in3"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev16",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev5",
+                "port": "in1"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev5",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev7",
+                "port": "in2"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev17",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev6",
+                "port": "in1"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev6",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev7",
+                "port": "in1"
+            },
+            "vertices": []
+        },
+        {
+            "from": {
+                "id": "dev18",
+                "port": "out"
+            },
+            "to": {
+                "id": "dev7",
+                "port": "in0"
+            },
+            "vertices": []
+        }
+    ],
+    "subcircuits": {}
 }
 ```
 
@@ -576,14 +1162,14 @@ You can also use a pseudo RTL code to define your circuit as demostrated below.
 
 ``` js
 // Init components
-AND(["and1", "and2"], ["and3"], 1, "AND1");
-OR(["or1", "or2"], ["or3"], 1, "OR1");
-XOR(["xor1", "xor2"], ["xor3"], 2, "XOR1");
-Button("btn1", 0, "BUTTON1");
-Button("btn2", 0, "BUTTON2");
-Button("btn3", 0, "BUTTON3");
-Button("btn4", 0, "BUTTON4");
-Lamp("lmp1", 3, "LAMP1");
+AND(["and1", "and2"], ["and3"], "AND1");
+OR(["or1", "or2"], ["or3"], "OR1");
+XOR(["xor1", "xor2"], ["xor3"], "XOR1");
+Button("btn1", "BUTTON1");
+Button("btn2", "BUTTON2");
+Button("btn3", "BUTTON3");
+Button("btn4", "BUTTON4");
+Lamp("lmp1", "LAMP1");
 
 // IO IN
 wire("btn1", "and1");
@@ -601,14 +1187,14 @@ wire("xor3", "lmp1", "Main Output");
 
 ``` js @DigiSim.eval
 // Init components
-AND(["and1", "and2"], ["and3"], 1, "AND1");
-OR(["or1", "or2"], ["or3"], 1, "OR1");
-XOR(["xor1", "xor2"], ["xor3"], 2, "XOR1");
-Button("btn1", 0, "BUTTON1");
-Button("btn2", 0, "BUTTON2");
-Button("btn3", 0, "BUTTON3");
-Button("btn4", 0, "BUTTON4");
-Lamp("lmp1", 3, "LAMP1");
+AND(["and1", "and2"], ["and3"], "AND1");
+OR(["or1", "or2"], ["or3"], "OR1");
+XOR(["xor1", "xor2"], ["xor3"], "XOR1");
+Button("btn1", "BUTTON1");
+Button("btn2", "BUTTON2");
+Button("btn3", "BUTTON3");
+Button("btn4", "BUTTON4");
+Lamp("lmp1", "LAMP1");
 
 // IO IN
 wire("btn1", "and1");
@@ -623,8 +1209,6 @@ wire("or3", "xor2");
 // IO OUT
 wire("xor3", "lmp1", "Main Output");
 ```
-
-# Json Docs
 
 # Js Docs
 To create a circuit you have to call some functions to create components for your circuit and then you can connect them with the `wire(outpurname, inputname, label)` function.
