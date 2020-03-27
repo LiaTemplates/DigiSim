@@ -1,7 +1,7 @@
 <!--
-author:   Yannik Höll
+author:   Yannik Höll & André Dietrich
 
-email:    labruzzler@gmail.com
+email:    labruzzler@gmail.com & andre.dietrich@ovgu.de
 
 version:  0.0.1
 
