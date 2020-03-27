@@ -291,5 +291,5 @@ function insertCircuit(name, digiSimId) {
     }
 
     const digiSim = document.getElementById(digiSimId);
-    digiSim.innerHTML = `<digi-sim>circuits[name]</digi-sim>;
+    digiSim.innerHTML = `<digi-sim>${JSON.stringify(circuits[name])}</digi-sim>`;
 }
